@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+  <style>
+    #favDialog {
+      border: 1px solid gray;
+      border-radius: 25px;
+      width: 85vw;
+      height: 85vh;
+    }
+    #formDialog {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
+    #buttonsDialog {
+      text-align: center;
+    }
+    #cancelBtn {
+      background-color: white;
+      color: blue;
+      border-radius: 25px;
+      padding: 10px 20px;
+      border: 1px solid blue;
+      cursor: pointer;
+    }
+    #confirmBtn {
+      background-color: blue;
+      color: white;
+      border-radius: 25px;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+    }
+    #selectDiag {
+      border-radius: 25px;
+      padding: 10px 20px;
+      border: 1px solid blue;
+    }
+    p {
+      color: blue;
+      font-size: 16px;
+    }
+  </style>
+  <!-- A modal dialog containing a form -->
+  <body>
+    <section style="width: 100vw; text-align: center">
+      <h1>Awersome dacing shark</h1>
+      <img
+        src="https://64.media.tumblr.com/cfd039730669f89c064f69e57e0877af/tumblr_nj6ipiNACJ1t8s6eeo1_500.gifv"
+      />
+      <p>
+        <button id="showDialog">Show the dialog</button>
+      </p>
+    </section>
+    <dialog id="favDialog">
+      <form id="formDialog">
+        <p>
+          <label
+            >Favorite animal:
+            <select id="selectDiag">
+              <option value="default">Choose…</option>
+              <option>Brine shrimp</option>
+              <option>Red panda</option>
+              <option>Spider monkey</option>
+            </select>
+          </label>
+        </p>
+        <div id="buttonsDialog">
+          <button id="cancelBtn" value="cancel" formmethod="dialog">
+            Cancel
+          </button>
+          <button id="confirmBtn" value="default">Confirm</button>
+        </div>
+      </form>
+    </dialog>
+    <output></output>
+  </body>
+  <script type="text/javascript">
+    const showButton = document.getElementById("showDialog");
+    const favDialog = document.getElementById("favDialog");
+    const outputBox = document.querySelector("output");
+    const selectEl = favDialog.querySelector("select");
+    const confirmBtn = favDialog.querySelector("#confirmBtn");
+
+    // "Show the dialog" button opens the <dialog> modally
+    showButton.addEventListener("click", () => {
+      favDialog.showModal();
+    });
+
+    // "Favorite animal" input sets the value of the submit button
+    selectEl.addEventListener("change", (e) => {
+      confirmBtn.value = selectEl.value;
+    });
+
+    // "Cancel" button closes the dialog without submitting because of [formmethod="dialog"], triggering a close event.
+    favDialog.addEventListener("close", (e) => {
+      outputBox.value =
+        favDialog.returnValue === "default"
+          ? "No return value."
+          : `ReturnValue: ${favDialog.returnValue}.`; // Have to check for "default" rather than empty string
+    });
+
+    // Prevent the "confirm" button from the default behavior of submitting the form, and close the dialog with the `close()` method, which triggers the "close" event.
+    confirmBtn.addEventListener("click", (event) => {
+      event.preventDefault(); // We don't want to submit this fake form
+      favDialog.close(selectEl.value); // Have to send the select box value here.
+    });
+  </script>
+</html>
